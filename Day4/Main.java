@@ -6,10 +6,18 @@ import java.util.*;
 
 class RealRoom {
 
-    public StringBuilder decryptedName;
-    public int sectorId;
+    private StringBuilder decryptedName;
+    private int sectorId;
     private char asciiSymbol;
     private int asciiNumeric;
+
+    StringBuilder getDecryptedName() {
+        return decryptedName;
+    }
+
+    int getSectorId() {
+        return sectorId;
+    }
 
     RealRoom(StringBuilder decryptedName, int sectorId) {
         this.decryptedName = decryptedName;
@@ -31,24 +39,39 @@ class RealRoom {
 }
 
 class EncryptedName {
-    public static int sectorSum = 0;
-    public static int realRoomsAmmount = 0;
+    private static int sectorSum = 0;
+    private static int realRoomsAmmount = 0;
     private final static String alphabet = "abcdefghijklmnopqrstuvwxyz";
 
-    private int[] values = new int[alphabet.length()];
+    static int getSectorSum() {
+        return sectorSum;
+    }
 
+    static int getRealRoomsAmmount() {
+        return realRoomsAmmount;
+    }
+
+    private int[] values = new int[alphabet.length()];
     private String encryptedName;
     private Map<Character, Integer> mapChar = new HashMap<Character, Integer>();
-    public int sectorId = 0;
+    private int sectorId = 0;
     private String checkSum;
     private StringBuilder mapCheckSum = new StringBuilder(alphabet);
-    public StringBuilder justEncryptedName = new StringBuilder();
+    private StringBuilder justEncryptedName = new StringBuilder();
+
+    StringBuilder getJustEncryptedName() {
+        return justEncryptedName;
+    }
+
+    int getSectorId() {
+        return sectorId;
+    }
 
     EncryptedName(String encryptedName) {
         this.encryptedName = encryptedName;
     }
 
-    void sortingName() {
+    void processingName() {
         for (int i = 0; i < encryptedName.length(); i++) {
 
             if (Character.isLetter(encryptedName.charAt(i)) && sectorId == 0) {
@@ -66,7 +89,7 @@ class EncryptedName {
 
         }
         justEncryptedName.deleteCharAt(justEncryptedName.length() - 1);
-        //System.out.println(justEncryptedName.toString());
+        System.out.println(justEncryptedName.toString());
         checkSum = encryptedName.substring(encryptedName.length() - 6, encryptedName.length() - 1);
     }
 
@@ -102,13 +125,6 @@ class EncryptedName {
         }
         return false;
     }
-
-    void wypisz() {
-        if (!checkSum.equals(mapCheckSum.substring(0, checkSum.length()).toString())) {
-            //System.out.println("checkSum: " + checkSum + " : " + mapCheckSum.substring(0, 5).toString());
-            //System.out.println("eN " + encryptedName + " sectorID " + sectorId + " checkSum " + checkSum);
-        }
-    }
 }
 
 public class Main {
@@ -126,25 +142,24 @@ public class Main {
             }
             line = alPath.toArray(new String[alPath.size()]);
         } catch (IOException e) {
-            System.out.println("Error");
+            System.out.println("Cannot read file: " + file.getPath());
         }
 
         ArrayList<EncryptedName> encryptedNameArrayList = new ArrayList<EncryptedName>();
         ArrayList<RealRoom> realRoomArrayList = new ArrayList<RealRoom>();
         for (int i = 0; i < line.length; i++) {
             encryptedNameArrayList.add(new EncryptedName(line[i]));
-            encryptedNameArrayList.get(i).sortingName();
+            encryptedNameArrayList.get(i).processingName();
             if (encryptedNameArrayList.get(i).checkIfRoom()) {
-                realRoomArrayList.add(new RealRoom(encryptedNameArrayList.get(i).justEncryptedName, encryptedNameArrayList.get(i).sectorId));
+                realRoomArrayList.add(new RealRoom(encryptedNameArrayList.get(i).getJustEncryptedName(), encryptedNameArrayList.get(i).getSectorId()));
             }
-            encryptedNameArrayList.get(i).wypisz();
 
         }
         for (int i = 0; i < realRoomArrayList.size(); i++) {
             realRoomArrayList.get(i).decipher();
-            System.out.println(realRoomArrayList.get(i).decryptedName + " " + realRoomArrayList.get(i).sectorId);
+            System.out.println(realRoomArrayList.get(i).getDecryptedName() + " " + realRoomArrayList.get(i).getSectorId());
         }
-        System.out.println(EncryptedName.sectorSum + " " + EncryptedName.realRoomsAmmount);
+        System.out.println(EncryptedName.getSectorSum() + " " + EncryptedName.getRealRoomsAmmount());
 
     }
 }
