@@ -134,6 +134,9 @@ class Screen {
     void showScreen() {
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 50; j++) {
+                if(j%5==0) {
+                    System.out.print(" ");
+                }
                 System.out.print(charScreen[j][i]);
             }
             System.out.println();
